@@ -1,5 +1,6 @@
 import { InMemoryUsersRepository } from "../../../../modules/users/repositories/in-memory/InMemoryUsersRepository";
 import { IUsersRepository } from "../../../../modules/users/repositories/IUsersRepository";
+import { CreateUserError } from "../../../../modules/users/useCases/createUser/CreateUserError";
 import { CreateUserUseCase } from "../../../../modules/users/useCases/createUser/CreateUserUseCase";
 
 let createUserUseCase: CreateUserUseCase;
@@ -19,7 +20,11 @@ describe("Create User", () => {
         expect(tryRegisterUser).toEqual(registeredUser);
     });
 
-    it("should be able to create user if email is already in use", async () => {
+    it("should be able to create user if email is already in use", () => {
+        expect(async () => {
+            await createUserUseCase.execute({ name: "Fulano", email: "fulano@ignite.com.br", password: "123456789" });
+            await createUserUseCase.execute({ name: "Ciclano", email: "fulano@ignite.com.br", password: "123456789" });
+        }).rejects.toBeInstanceOf(CreateUserError);
 
     });
 });

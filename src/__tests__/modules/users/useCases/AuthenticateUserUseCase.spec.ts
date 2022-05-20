@@ -7,6 +7,7 @@ let authenticateUserUseCase: AuthenticateUserUseCase;
 let usersRepository: IUsersRepository;
 
 describe("Autenticate user", () => { 
+describe("Authenticate user", () => { 
     beforeEach(async () => {
         usersRepository = new InMemoryUsersRepository();
         authenticateUserUseCase = new AuthenticateUserUseCase(usersRepository);

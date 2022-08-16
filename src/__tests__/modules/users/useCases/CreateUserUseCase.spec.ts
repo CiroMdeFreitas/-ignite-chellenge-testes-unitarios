@@ -1,14 +1,43 @@
-import { InMemoryUsersRepository } from "../../../../modules/users/repositories/in-memory/InMemoryUsersRepository";
+import { v4 as uuidV4 } from "uuid";
+import { hash } from "bcryptjs";
+import { Connection, createConnection } from "typeorm";
 import { IUsersRepository } from "../../../../modules/users/repositories/IUsersRepository";
+import { UsersRepository } from "../../../../modules/users/repositories/UsersRepository";
 import { CreateUserError } from "../../../../modules/users/useCases/createUser/CreateUserError";
 import { CreateUserUseCase } from "../../../../modules/users/useCases/createUser/CreateUserUseCase";
 
 let createUserUseCase: CreateUserUseCase;
 let usersRepository: IUsersRepository;
+let connection: Connection;
 
 describe("Create User", () => {
+    beforeAll(async () => {
+        connection = await createConnection();
+        await connection.runMigrations();
+
+
+        const id = uuidV4()
+        const password = await hash("admin", 8);
+        await connection.query(
+            `
+                INSERT INTO USERS(id, name, email, password, created_at, updated_at) 
+                values(
+                    '${id}',
+                    'admin',
+                    'admin@rentx.com,br',
+                    '${password}',
+                    'now()',
+                    'now()')
+            `)
+    });
+
+    afterAll(async () => {
+        await connection.dropDatabase();
+        await connection.close();
+    });
+    
     beforeEach(async () => {
-        usersRepository = new InMemoryUsersRepository();
+        usersRepository = new UsersRepository();
         createUserUseCase = new CreateUserUseCase(usersRepository);
     });
 

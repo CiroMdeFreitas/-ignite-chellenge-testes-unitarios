@@ -15,7 +15,6 @@ describe("Create User Use Case", () => {
         connection = await createConnection();
         await connection.runMigrations();
 
-
         const id = uuidV4()
         const password = await hash("admin", 8);
         await connection.query(

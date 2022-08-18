@@ -4,6 +4,7 @@ import { Connection, createConnection } from "typeorm";
 import { IUsersRepository } from "../../../../modules/users/repositories/IUsersRepository";
 import { UsersRepository } from "../../../../modules/users/repositories/UsersRepository";
 import { AuthenticateUserUseCase } from "../../../../modules/users/useCases/authenticateUser/AuthenticateUserUseCase";
+import { IncorrectEmailOrPasswordError } from "../../../../modules/users/useCases/authenticateUser/IncorrectEmailOrPasswordError";
 
 
 let authenticateUserUseCase: AuthenticateUserUseCase;
@@ -61,7 +62,11 @@ describe("Authenticate user", () => {
         expect(loginAttempt).toHaveProperty("token");
     });
 
-    it("should not be able to login if email is incorrect", async () => {});
+    it("should not be able to login if email is incorrect", async () => {
+        expect(async () => {
+            await authenticateUserUseCase.execute({ email: "wrong@email.com", password: "123456789" });
+        }).rejects.toBeInstanceOf(IncorrectEmailOrPasswordError);
+    });
 
     it("should not be able to login if password is incorrect", async () => {});
 });

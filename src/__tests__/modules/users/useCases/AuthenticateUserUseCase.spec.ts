@@ -15,20 +15,33 @@ describe("Authenticate user", () => {
         connection = await createConnection();
         await connection.runMigrations();
 
-
-        const id = uuidV4()
-        const password = await hash("admin", 8);
+        const adminId = uuidV4()
+        const adminPassword = await hash("admin", 8);
         await connection.query(
             `
                 INSERT INTO USERS(id, name, email, password, created_at, updated_at) 
                 values(
-                    '${id}',
+                    '${adminId}',
                     'admin',
                     'admin@rentx.com,br',
-                    '${password}',
+                    '${adminPassword}',
                     'now()',
                     'now()')
-            `)
+            `);
+
+        const userId = uuidV4()
+        const userPassword = await hash("123456789", 8);
+        await connection.query(
+            `
+                INSERT INTO USERS(id, name, email, password, created_at, updated_at) 
+                values(
+                    '${userId}',
+                    'Fulano',
+                    'fulano@ignite.com.br',
+                    '${userPassword}',
+                    'now()',
+                    'now()')
+            `);
     });
 
     afterAll(async () => {
@@ -42,17 +55,13 @@ describe("Authenticate user", () => {
     });
 
     it("should be able to login if email and password are correct", async () => {
-        const password = "123456789";
-        const hashedPassword = await hash("123456789", 8)
-        const registeredUser = await usersRepository.create({ name: "Fulano", email: "fulano@ignite.com.br", password: String(hashedPassword) });
-
-        const loginAttempt = await authenticateUserUseCase.execute({ email: registeredUser.email, password: password });
+        const loginAttempt = await authenticateUserUseCase.execute({ email: "fulano@ignite.com.br", password: "123456789" });
         
         expect(loginAttempt).toHaveProperty("user");
         expect(loginAttempt).toHaveProperty("token");
     });
 
-    it("should not be able to login if email is incorrect", () => {});
+    it("should not be able to login if email is incorrect", async () => {});
 
-    it("should not be able to login if password is incorrect", () => {});
+    it("should not be able to login if password is incorrect", async () => {});
 });

@@ -68,5 +68,9 @@ describe("Authenticate user", () => {
         }).rejects.toBeInstanceOf(IncorrectEmailOrPasswordError);
     });
 
-    it("should not be able to login if password is incorrect", async () => {});
+    it("should not be able to login if password is incorrect", async () => {
+        expect(async () => {
+            await authenticateUserUseCase.execute({ email: "fulano@ignite.com.br", password: "wrong password" });
+        }).rejects.toBeInstanceOf(IncorrectEmailOrPasswordError);
+    });
 });

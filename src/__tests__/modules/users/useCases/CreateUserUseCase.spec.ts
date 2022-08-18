@@ -10,7 +10,7 @@ let createUserUseCase: CreateUserUseCase;
 let usersRepository: IUsersRepository;
 let connection: Connection;
 
-describe("Create User", () => {
+describe("Create User Use Case", () => {
     beforeAll(async () => {
         connection = await createConnection();
         await connection.runMigrations();

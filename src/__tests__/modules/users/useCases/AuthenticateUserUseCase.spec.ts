@@ -44,7 +44,7 @@ describe("Authenticate user", () => {
     it("should be able to login if email and password are correct", async () => {
         const password = "123456789";
         const hashedPassword = await hash("123456789", 8)
-        const registeredUser = await usersRepository.create({ name: "Fulano", email: "fulano@ignite.com.br", password: String(hashedPassword)});
+        const registeredUser = await usersRepository.create({ name: "Fulano", email: "fulano@ignite.com.br", password: String(hashedPassword) });
 
         const loginAttempt = await authenticateUserUseCase.execute({ email: registeredUser.email, password: password });
         

@@ -54,6 +54,5 @@ describe("Create User", () => {
             await createUserUseCase.execute({ name: "Fulano", email: "fulano@ignite.com.br", password: "123456789" });
             await createUserUseCase.execute({ name: "Ciclano", email: "fulano@ignite.com.br", password: "123456789" });
         }).rejects.toBeInstanceOf(CreateUserError);
-
     });
 });

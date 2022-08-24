@@ -1,6 +1,7 @@
 import { hash } from "bcryptjs";
 import { v4 as uuidV4 } from "uuid";
-import { Connection, createConnection } from "typeorm";
+import { Connection } from "typeorm";
+import createConnection from '../../../../database';
 import request from "supertest";
 import { app } from "../../../../app";
 
@@ -32,7 +33,7 @@ describe("Create User Controller", () => {
     });
 
     it("should be able to create user", async () => {
-        const response = await request(app).post("/users").send({
+        const response = await request(app).post("/api/v1/users").send({
             name: "Fulano",
             email: "fulano@ignite.com.br",
             password: "123456789"

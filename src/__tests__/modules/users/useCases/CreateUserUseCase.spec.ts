@@ -1,6 +1,7 @@
 import { v4 as uuidV4 } from "uuid";
 import { hash } from "bcryptjs";
-import { Connection, createConnection } from "typeorm";
+import { Connection } from "typeorm";
+import createConnection from '../../../../database';
 import { IUsersRepository } from "../../../../modules/users/repositories/IUsersRepository";
 import { UsersRepository } from "../../../../modules/users/repositories/UsersRepository";
 import { CreateUserError } from "../../../../modules/users/useCases/createUser/CreateUserError";

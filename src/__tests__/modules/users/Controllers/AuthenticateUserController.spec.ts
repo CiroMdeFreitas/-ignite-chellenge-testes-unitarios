@@ -55,6 +55,12 @@ describe("Authenticate user", () => {
     });
 
     it("should not be able to login if email is incorrect", async () => {
+        const response = await request(app).post("/api/v1/sessions").send({
+            email: "wrong@email.com.br",
+            password: "123456789"
+        });
+
+        expect(response.status).toBe(401);
     });
 
     it("should not be able to login if password is incorrect", async () => {

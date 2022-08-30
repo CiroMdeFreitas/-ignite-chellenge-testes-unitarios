@@ -1,5 +1,3 @@
-import { hash } from "bcryptjs";
-import { v4 as uuidV4 } from "uuid";
 import { Connection } from "typeorm";
 import createConnection from '../../../../database';
 import request from "supertest";
@@ -11,20 +9,6 @@ describe("Create User Controller", () => {
     beforeAll(async () => {
         connection = await createConnection();
         await connection.runMigrations();
-
-        const id = uuidV4()
-        const password = await hash("admin", 8);
-        await connection.query(
-            `
-                INSERT INTO USERS(id, name, email, password, created_at, updated_at) 
-                values(
-                    '${id}',
-                    'admin',
-                    'admin@rentx.com,br',
-                    '${password}',
-                    'now()',
-                    'now()')
-            `)
     });
 
     afterAll(async () => {

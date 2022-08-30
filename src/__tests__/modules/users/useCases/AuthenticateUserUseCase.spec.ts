@@ -19,20 +19,6 @@ describe("Authenticate User Use Case", () => {
         connection = await createConnection();
         await connection.runMigrations();
 
-        const adminId = uuidV4()
-        const adminPassword = await hash("admin", 8);
-        await connection.query(
-            `
-                INSERT INTO USERS(id, name, email, password, created_at, updated_at) 
-                values(
-                    '${adminId}',
-                    'admin',
-                    'admin@rentx.com,br',
-                    '${adminPassword}',
-                    'now()',
-                    'now()')
-            `);
-
         const userId = uuidV4()
         const userPassword = await hash(rightPassword, 8);
         await connection.query(

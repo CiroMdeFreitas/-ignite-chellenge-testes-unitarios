@@ -1,11 +1,10 @@
 import { hash } from "bcryptjs";
 import { v4 as uuidV4 } from "uuid";
-import { Connection } from "typeorm";
+import { Connection, QueryFailedError } from "typeorm";
 import createConnection from '../../../../database';
 import { IUsersRepository } from "../../../../modules/users/repositories/IUsersRepository";
 import { UsersRepository } from "../../../../modules/users/repositories/UsersRepository";
 import { ShowUserProfileUseCase } from "../../../../modules/users/useCases/showUserProfile/ShowUserProfileUseCase";
-import { User } from "../../../../modules/users/entities/User";
 
 let showUserProfileUseCase: ShowUserProfileUseCase;
 let usersRepository: IUsersRepository;
@@ -48,5 +47,9 @@ describe("Show User Profile Use Case", () => {
         expect(userProfile.id).toEqual(existingUserId);
     });
 
-    it("should not be able to show user profile if user does not exist", async () => {});
+    it("should not be able to show user profile if user does not exist", () => {
+        expect(async () => {
+            await showUserProfileUseCase.execute("wrongId");
+        }).rejects.toBeInstanceOf(QueryFailedError);
+    });
 });

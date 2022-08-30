@@ -39,7 +39,6 @@ describe("Authenticate User Controller", () => {
             email: rightEmail,
             password: rightPassword
         });
-
         expect(response.status).toBe(200);
     });
 
@@ -48,7 +47,6 @@ describe("Authenticate User Controller", () => {
             email: "wrong@email.com.br",
             password: rightPassword
         });
-
         expect(response.status).toBe(401);
     });
 
@@ -57,7 +55,6 @@ describe("Authenticate User Controller", () => {
             email: rightEmail,
             password: "wrongPassword"
         });
-
         expect(response.status).toBe(401);
     });
 });

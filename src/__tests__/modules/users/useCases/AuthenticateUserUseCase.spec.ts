@@ -26,7 +26,7 @@ describe("Authenticate User Use Case", () => {
                 INSERT INTO USERS(id, name, email, password, created_at, updated_at) 
                 values(
                     '${userId}',
-                    'Fulano',
+                    'User',
                     '${rightEmail}',
                     '${userPassword}',
                     'now()',
@@ -45,7 +45,10 @@ describe("Authenticate User Use Case", () => {
     });
 
     it("should be able to login if email and password are correct", async () => {
-        const loginAttempt = await authenticateUserUseCase.execute({ email: rightEmail, password: rightPassword });
+        const loginAttempt = await authenticateUserUseCase.execute({
+            email: rightEmail,
+            password: rightPassword
+        });
         
         expect(loginAttempt).toHaveProperty("user");
         expect(loginAttempt).toHaveProperty("token");
@@ -53,13 +56,19 @@ describe("Authenticate User Use Case", () => {
 
     it("should not be able to login if email is incorrect", async () => {
         expect(async () => {
-            await authenticateUserUseCase.execute({ email: "wrong@email.com", password: rightPassword });
+            await authenticateUserUseCase.execute({
+                email: "wrong@email.com",
+                password: rightPassword
+            });
         }).rejects.toBeInstanceOf(IncorrectEmailOrPasswordError);
     });
 
     it("should not be able to login if password is incorrect", async () => {
         expect(async () => {
-            await authenticateUserUseCase.execute({ email: rightEmail, password: "wrongPassword" });
+            await authenticateUserUseCase.execute({
+                email: rightEmail,
+                password: "wrongPassword"
+            });
         }).rejects.toBeInstanceOf(IncorrectEmailOrPasswordError);
     });
 });

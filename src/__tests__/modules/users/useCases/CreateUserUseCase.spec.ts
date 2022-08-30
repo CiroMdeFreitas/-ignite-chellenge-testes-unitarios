@@ -26,7 +26,11 @@ describe("Create User Use Case", () => {
     });
 
     it("should be able to create user", async () => {
-        const tryRegisterUser = await createUserUseCase.execute({ name: "Fulano", email: "fulano@ignite.com.br", password: "123456789" });
+        const tryRegisterUser = await createUserUseCase.execute({
+            name: "User",
+            email: "user@email.com.br",
+            password: "password"
+        });
 
         const registeredUser = await usersRepository.findByEmail(tryRegisterUser.email);
 
@@ -35,8 +39,17 @@ describe("Create User Use Case", () => {
 
     it("should not be able to create user if email is already in use", () => {
         expect(async () => {
-            await createUserUseCase.execute({ name: "Fulano", email: "fulano@ignite.com.br", password: "123456789" });
-            await createUserUseCase.execute({ name: "Ciclano", email: "fulano@ignite.com.br", password: "123456789" });
+            await createUserUseCase.execute({
+                name: "User",
+                email: "user@email.com.br",
+                password: "password"
+            });
+
+            await createUserUseCase.execute({
+                name: "Another User",
+                email: "user@email.com.br",
+                password: "password"
+            });
         }).rejects.toBeInstanceOf(CreateUserError);
     });
 });

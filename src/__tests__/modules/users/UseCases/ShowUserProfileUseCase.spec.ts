@@ -5,12 +5,13 @@ import createConnection from '../../../../database';
 import { IUsersRepository } from "../../../../modules/users/repositories/IUsersRepository";
 import { UsersRepository } from "../../../../modules/users/repositories/UsersRepository";
 import { ShowUserProfileUseCase } from "../../../../modules/users/useCases/showUserProfile/ShowUserProfileUseCase";
+import { User } from "../../../../modules/users/entities/User";
 
 let showUserProfileUseCase: ShowUserProfileUseCase;
 let usersRepository: IUsersRepository;
 let connection: Connection;
 
-const existingUserId = uuidV4()
+const existingUserId = uuidV4();
 
 describe("Show User Profile Use Case", () => {
     beforeAll(async () => {
@@ -41,7 +42,11 @@ describe("Show User Profile Use Case", () => {
         showUserProfileUseCase = new ShowUserProfileUseCase(usersRepository);
     });
 
-    it("should be able to show user profile", async () => {});
+    it("should be able to show user profile", async () => {
+        const userProfile = await showUserProfileUseCase.execute(existingUserId);
+
+        expect(userProfile.id).toEqual(existingUserId);
+    });
 
     it("should not be able to show user profile if user does not exist", async () => {});
 });

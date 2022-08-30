@@ -64,6 +64,11 @@ describe("Authenticate user", () => {
     });
 
     it("should not be able to login if password is incorrect", async () => {
+        const response = await request(app).post("/api/v1/sessions").send({
+            email: "fulano@ignite.com.br",
+            password: "wrongPassword"
         });
 
+        expect(response.status).toBe(401);
+    });
 });

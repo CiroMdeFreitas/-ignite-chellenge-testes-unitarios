@@ -7,7 +7,6 @@ import { UsersRepository } from "../../../../modules/users/repositories/UsersRep
 import { AuthenticateUserUseCase } from "../../../../modules/users/useCases/authenticateUser/AuthenticateUserUseCase";
 import { IncorrectEmailOrPasswordError } from "../../../../modules/users/useCases/authenticateUser/IncorrectEmailOrPasswordError";
 
-
 let authenticateUserUseCase: AuthenticateUserUseCase;
 let usersRepository: IUsersRepository;
 let connection: Connection;

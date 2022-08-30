@@ -9,7 +9,7 @@ let connection: Connection;
 const rightEmail = "right@email.com.br";
 const rightPassword = "rightPassword";
 
-describe("Authenticate user", () => { 
+describe("Authenticate User Controller", () => { 
     beforeAll(async () => {
         connection = await createConnection();
         await connection.runMigrations();

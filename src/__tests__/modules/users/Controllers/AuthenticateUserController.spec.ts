@@ -1,6 +1,8 @@
 import { v4 as uuidV4 } from "uuid";
 import { Connection, createConnection } from "typeorm";
 import { hash } from "bcryptjs";
+import { app } from "../../../../app";
+import request from "supertest";
 
 let connection: Connection;
 
@@ -43,9 +45,19 @@ describe("Authenticate user", () => {
         await connection.close();
     });
 
-    it("should be able to login if email and password are correct", async () => {});
+    it("should be able to login if email and password are correct", async () => {
+        const response = await request(app).post("/api/v1/sessions").send({
+            email: "fulano@ignite.com.br",
+            password: "123456789"
+        });
 
-    it("should not be able to login if email is incorrect", async () => {});
+        expect(response.status).toBe(200);
+    });
 
-    it("should not be able to login if password is incorrect", async () => {});
+    it("should not be able to login if email is incorrect", async () => {
+    });
+
+    it("should not be able to login if password is incorrect", async () => {
+        });
+
 });

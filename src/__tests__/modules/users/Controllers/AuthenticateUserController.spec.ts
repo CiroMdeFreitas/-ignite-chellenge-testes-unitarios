@@ -6,6 +6,9 @@ import request from "supertest";
 
 let connection: Connection;
 
+const rightEmail = "right@email.com.br";
+const rightPassword = "rightPassword";
+
 describe("Authenticate user", () => { 
     beforeAll(async () => {
         connection = await createConnection();
@@ -26,14 +29,14 @@ describe("Authenticate user", () => {
             `);
 
         const userId = uuidV4()
-        const userPassword = await hash("123456789", 8);
+        const userPassword = await hash(rightPassword, 8);
         await connection.query(
             `
                 INSERT INTO USERS(id, name, email, password, created_at, updated_at) 
                 values(
                     '${userId}',
                     'Fulano',
-                    'fulano@ignite.com.br',
+                    '${rightEmail}',
                     '${userPassword}',
                     'now()',
                     'now()')
@@ -47,8 +50,8 @@ describe("Authenticate user", () => {
 
     it("should be able to login if email and password are correct", async () => {
         const response = await request(app).post("/api/v1/sessions").send({
-            email: "fulano@ignite.com.br",
-            password: "123456789"
+            email: rightEmail,
+            password: rightPassword
         });
 
         expect(response.status).toBe(200);
@@ -57,7 +60,7 @@ describe("Authenticate user", () => {
     it("should not be able to login if email is incorrect", async () => {
         const response = await request(app).post("/api/v1/sessions").send({
             email: "wrong@email.com.br",
-            password: "123456789"
+            password: rightPassword
         });
 
         expect(response.status).toBe(401);
@@ -65,7 +68,7 @@ describe("Authenticate user", () => {
 
     it("should not be able to login if password is incorrect", async () => {
         const response = await request(app).post("/api/v1/sessions").send({
-            email: "fulano@ignite.com.br",
+            email: rightEmail,
             password: "wrongPassword"
         });
 

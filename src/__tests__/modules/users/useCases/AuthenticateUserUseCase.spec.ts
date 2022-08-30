@@ -11,6 +11,9 @@ let authenticateUserUseCase: AuthenticateUserUseCase;
 let usersRepository: IUsersRepository;
 let connection: Connection;
 
+const rightEmail = "right@email.com.br";
+const rightPassword = "rightPassword";
+
 describe("Authenticate user", () => { 
     beforeAll(async () => {
         connection = await createConnection();
@@ -31,14 +34,14 @@ describe("Authenticate user", () => {
             `);
 
         const userId = uuidV4()
-        const userPassword = await hash("123456789", 8);
+        const userPassword = await hash(rightPassword, 8);
         await connection.query(
             `
                 INSERT INTO USERS(id, name, email, password, created_at, updated_at) 
                 values(
                     '${userId}',
                     'Fulano',
-                    'fulano@ignite.com.br',
+                    '${rightEmail}',
                     '${userPassword}',
                     'now()',
                     'now()')
@@ -56,7 +59,7 @@ describe("Authenticate user", () => {
     });
 
     it("should be able to login if email and password are correct", async () => {
-        const loginAttempt = await authenticateUserUseCase.execute({ email: "fulano@ignite.com.br", password: "123456789" });
+        const loginAttempt = await authenticateUserUseCase.execute({ email: rightEmail, password: rightPassword });
         
         expect(loginAttempt).toHaveProperty("user");
         expect(loginAttempt).toHaveProperty("token");
@@ -64,13 +67,13 @@ describe("Authenticate user", () => {
 
     it("should not be able to login if email is incorrect", async () => {
         expect(async () => {
-            await authenticateUserUseCase.execute({ email: "wrong@email.com", password: "123456789" });
+            await authenticateUserUseCase.execute({ email: "wrong@email.com", password: rightPassword });
         }).rejects.toBeInstanceOf(IncorrectEmailOrPasswordError);
     });
 
     it("should not be able to login if password is incorrect", async () => {
         expect(async () => {
-            await authenticateUserUseCase.execute({ email: "fulano@ignite.com.br", password: "wrong password" });
+            await authenticateUserUseCase.execute({ email: rightEmail, password: "wrongPassword" });
         }).rejects.toBeInstanceOf(IncorrectEmailOrPasswordError);
     });
 });

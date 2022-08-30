@@ -42,5 +42,19 @@ describe("Create User Controller", () => {
         expect(response.status).toBe(201);
     });
 
-    it("should not be able to create user if email is already in use", () => {});
+    it("should not be able to create user if email is already in use", async () => {
+        await request(app).post("/api/v1/users").send({
+            name: "Fulano",
+            email: "fulano@ignite.com.br",
+            password: "123456789"
+        });
+
+        const response = await request(app).post("/api/v1/users").send({
+            name: "Ciclano",
+            email: "fulano@ignite.com.br",
+            password: "123456789"
+        });
+
+        expect(response.status).toBe(400);
+    });
 });

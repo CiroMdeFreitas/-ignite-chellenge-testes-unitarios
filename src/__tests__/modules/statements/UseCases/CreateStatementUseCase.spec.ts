@@ -13,6 +13,11 @@ let statementsRepository: IStatementsRepository;
 let usersRepository: IUsersRepository;
 let connection: Connection;
 
+enum OperationType {
+  DEPOSIT = 'deposit',
+  WITHDRAW = 'withdraw',
+}
+
 const userId = uuidV4();
 
 describe("Create Statement Use Case", () => {
@@ -45,7 +50,18 @@ describe("Create Statement Use Case", () => {
         createStamentUseCase = new CreateStatementUseCase(usersRepository, statementsRepository);
     });
 
-    it("Should be able to make a deposit on user's account", () => {});
+    it("Should be able to make a deposit on user's account", async () => {
+        const statement = await createStamentUseCase.execute({
+            user_id: String(userId),
+            type: "deposit" as OperationType,
+            amount: 100,
+            description: "description",
+        })
+
+        expect(statement).toHaveProperty("id");
+        expect(statement.user_id).toBe(userId);
+        expect(statement.type).toBe("deposit");
+    });
 
     it("Should be able to make a withdraw from user's account", () => {});
 

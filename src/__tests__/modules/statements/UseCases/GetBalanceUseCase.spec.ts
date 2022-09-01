@@ -7,6 +7,7 @@ import { IUsersRepository } from "../../../../modules/users/repositories/IUsersR
 import { GetBalanceUseCase } from "../../../../modules/statements/useCases/getBalance/GetBalanceUseCase";
 import { IStatementsRepository } from "../../../../modules/statements/repositories/IStatementsRepository";
 import { StatementsRepository } from "../../../../modules/statements/repositories/StatementsRepository";
+import { GetBalanceError } from "../../../../modules/statements/useCases/getBalance/GetBalanceError";
 
 let getBalanceUseCase: GetBalanceUseCase; 
 let statementsRepository: IStatementsRepository; 
@@ -53,4 +54,13 @@ describe("Get Balance Use Case", () => {
         expect(balance).toHaveProperty("statement");
         expect(balance).toHaveProperty("balance");
     });
+
+    it("Should not be able to show user's balance if user is invalid", () => {
+        expect(async () => {
+            const wrongUserId = uuidV4();
+            await getBalanceUseCase.execute({
+                user_id: String(wrongUserId),
+            });
+        }).rejects.toBeInstanceOf(GetBalanceError);
+    })
 });

@@ -103,5 +103,9 @@ describe("Create Statement Use Case", () => {
         }).rejects.toBeInstanceOf(CreateStatementError.UserNotFound);
     });
 
-    it("Should not be able to make a withdraw from user's account if user's balance is insufficient", () => {});
+    it("Should not be able to make a withdraw from user's account if user's balance is insufficient", async () => {
+        await expect(async () => {
+            await createStatementUseCase.execute(withdrawStatement);
+        }).rejects.toBeInstanceOf(CreateStatementError.InsufficientFunds);
+    });
 });

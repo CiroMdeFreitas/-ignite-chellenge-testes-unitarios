@@ -8,6 +8,7 @@ import { IStatementsRepository } from "../../../../modules/statements/repositori
 import { CreateStatementUseCase } from "../../../../modules/statements/useCases/createStatement/CreateStatementUseCase";
 import { StatementsRepository } from "../../../../modules/statements/repositories/StatementsRepository";
 import { CreateStatementError } from "../../../../modules/statements/useCases/createStatement/CreateStatementError";
+import { ICreateStatementDTO } from "../../../../modules/statements/useCases/createStatement/ICreateStatementDTO";
 
 let createStatementUseCase: CreateStatementUseCase; 
 let statementsRepository: IStatementsRepository; 
@@ -20,6 +21,28 @@ enum OperationType {
 }
 
 const userId = uuidV4();
+const wrongUserId = uuidV4();
+
+const depositStatement: ICreateStatementDTO = {
+    user_id: userId,
+    type: OperationType.DEPOSIT,
+    amount: 100,
+    description: "deposit description",
+}
+
+const withdrawStatement: ICreateStatementDTO = {
+    user_id: userId,
+    type: OperationType.WITHDRAW,
+    amount: 100,
+    description: "withdraw description",
+}
+
+const wrongoUserStatement: ICreateStatementDTO = {
+    user_id: wrongUserId,
+    type: OperationType.DEPOSIT,
+    amount: 100,
+    description: "deposit description",
+}
 
 describe("Create Statement Use Case", () => {
     beforeAll(async () => {
@@ -52,48 +75,31 @@ describe("Create Statement Use Case", () => {
     });
 
     it("Should be able to make a deposit on user's account", async () => {
-        const statement = await createStatementUseCase.execute({
-            user_id: String(userId),
-            type: "deposit" as OperationType,
-            amount: 100,
-            description: "description",
-        });
+        const statement = await createStatementUseCase.execute(depositStatement);
 
         expect(statement).toHaveProperty("id");
         expect(statement.user_id).toBe(userId);
-        expect(statement.type).toBe("deposit");
+        expect(statement.type).toBe('deposit');
     });
 
     it("Should be able to make a withdraw from user's account", async () => {
-        await createStatementUseCase.execute({
-            user_id: String(userId),
-            type: "deposit" as OperationType,
-            amount: 100,
-            description: "description",
-        });
+        await createStatementUseCase.execute(depositStatement);
 
         const statement = await createStatementUseCase.execute({
             user_id: String(userId),
-            type: "withdraw" as OperationType,
+            type: 'withdraw' as OperationType,
             amount: 100,
             description: "description",
         });
 
         expect(statement).toHaveProperty("id");
         expect(statement.user_id).toBe(userId);
-        expect(statement.type).toBe("withdraw");
+        expect(statement.type).toBe('withdraw');
     });
 
-    it("Should not be able to do a statement if user is invalid", () => {
-        expect(async () => {
-            const wrongUserId = uuidV4();
-
-            await createStatementUseCase.execute({
-                user_id: String(wrongUserId),
-                type: "deposit" as OperationType,
-                amount: 100,
-                description: "description",
-            });
+    it("Should not be able to do a statement if user is invalid", async () => {
+        await expect(async () => {
+            await createStatementUseCase.execute(wrongoUserStatement);
         }).rejects.toBeInstanceOf(CreateStatementError.UserNotFound);
     });
 

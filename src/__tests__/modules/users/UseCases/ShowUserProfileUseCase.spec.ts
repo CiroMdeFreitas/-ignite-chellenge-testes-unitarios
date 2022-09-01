@@ -5,6 +5,7 @@ import createConnection from '../../../../database';
 import { IUsersRepository } from "../../../../modules/users/repositories/IUsersRepository";
 import { UsersRepository } from "../../../../modules/users/repositories/UsersRepository";
 import { ShowUserProfileUseCase } from "../../../../modules/users/useCases/showUserProfile/ShowUserProfileUseCase";
+import { ShowUserProfileError } from "../../../../modules/users/useCases/showUserProfile/ShowUserProfileError";
 
 let showUserProfileUseCase: ShowUserProfileUseCase;
 let usersRepository: IUsersRepository;
@@ -49,7 +50,8 @@ describe("Show User Profile Use Case", () => {
 
     it("should not be able to show user profile if user does not exist", () => {
         expect(async () => {
-            await showUserProfileUseCase.execute("wrongId");
-        }).rejects.toBeInstanceOf(QueryFailedError);
+            const wrongUserId = uuidV4();
+            await showUserProfileUseCase.execute(wrongUserId);
+        }).rejects.toBeInstanceOf(ShowUserProfileError);
     });
 });

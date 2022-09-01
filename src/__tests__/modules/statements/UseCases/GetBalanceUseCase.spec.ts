@@ -13,25 +13,22 @@ let statementsRepository: IStatementsRepository;
 let usersRepository: IUsersRepository;
 let connection: Connection;
 
-const userEmail = "user@email.com";
-const userPassword = "password";
+const userId = uuidV4();
 
 describe("Get Balance Use Case", () => {
     beforeAll(async () => {
         connection = await createConnection();
         await connection.runMigrations();
 
-
-        const userId = uuidV4();
-        const hashedPassword = await hash(userPassword, 8);
+        const userPassword = await hash("password", 8);
         await connection.query(
             `
                 INSERT INTO USERS(id, name, email, password, created_at, updated_at) 
                 values(
                     '${userId}',
                     'User',
-                    '${userEmail}',
-                    '${hashedPassword}',
+                    'user@email.com',
+                    '${userPassword}',
                     'now()',
                     'now()')
             `);
@@ -48,5 +45,12 @@ describe("Get Balance Use Case", () => {
         getBalanceUseCase = new GetBalanceUseCase(statementsRepository, usersRepository);
     });
 
-    it("Should be able to show user's balance", async () => ({}));
+    it("Should be able to show user's balance", async () => {
+        const balance = await getBalanceUseCase.execute({
+            user_id: String(userId),
+        });
+
+        expect(balance).toHaveProperty("statement");
+        expect(balance).toHaveProperty("balance");
+    });
 });

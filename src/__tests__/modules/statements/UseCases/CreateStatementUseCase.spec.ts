@@ -7,8 +7,9 @@ import { IUsersRepository } from "../../../../modules/users/repositories/IUsersR
 import { IStatementsRepository } from "../../../../modules/statements/repositories/IStatementsRepository";
 import { CreateStatementUseCase } from "../../../../modules/statements/useCases/createStatement/CreateStatementUseCase";
 import { StatementsRepository } from "../../../../modules/statements/repositories/StatementsRepository";
+import { CreateStatementError } from "../../../../modules/statements/useCases/createStatement/CreateStatementError";
 
-let createStamentUseCase: CreateStatementUseCase; 
+let createStatementUseCase: CreateStatementUseCase; 
 let statementsRepository: IStatementsRepository; 
 let usersRepository: IUsersRepository;
 let connection: Connection;
@@ -47,16 +48,16 @@ describe("Create Statement Use Case", () => {
     beforeEach(async () => {
         usersRepository = new UsersRepository();
         statementsRepository = new StatementsRepository();
-        createStamentUseCase = new CreateStatementUseCase(usersRepository, statementsRepository);
+        createStatementUseCase = new CreateStatementUseCase(usersRepository, statementsRepository);
     });
 
     it("Should be able to make a deposit on user's account", async () => {
-        const statement = await createStamentUseCase.execute({
+        const statement = await createStatementUseCase.execute({
             user_id: String(userId),
             type: "deposit" as OperationType,
             amount: 100,
             description: "description",
-        })
+        });
 
         expect(statement).toHaveProperty("id");
         expect(statement.user_id).toBe(userId);

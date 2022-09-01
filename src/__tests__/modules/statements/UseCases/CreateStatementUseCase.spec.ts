@@ -64,7 +64,25 @@ describe("Create Statement Use Case", () => {
         expect(statement.type).toBe("deposit");
     });
 
-    it("Should be able to make a withdraw from user's account", () => {});
+    it("Should be able to make a withdraw from user's account", async () => {
+        await createStatementUseCase.execute({
+            user_id: String(userId),
+            type: "deposit" as OperationType,
+            amount: 100,
+            description: "description",
+        });
+
+        const statement = await createStatementUseCase.execute({
+            user_id: String(userId),
+            type: "withdraw" as OperationType,
+            amount: 100,
+            description: "description",
+        });
+
+        expect(statement).toHaveProperty("id");
+        expect(statement.user_id).toBe(userId);
+        expect(statement.type).toBe("withdraw");
+    });
 
     it("Should not be able to do a statement if user is invalid", () => {});
 

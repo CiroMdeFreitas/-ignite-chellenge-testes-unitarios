@@ -47,3 +47,19 @@ describe("Show User Profile Controller", () => {
         });
 
         expect(response.status).toBe(200);
+    });
+
+    it("should not be able to show user profile if token is invalid", async () => {
+        const login = await request(app).post("/api/v1/sessions").send({
+            email: userEmail,
+            password: "wrongPassword"
+        });
+        const { token } = login.body;
+    
+        const response = await request(app).get("/api/v1/profile").set({
+            Authorization: `Bearer ${token}`
+        });
+    
+        expect(response.status).toBe(401);
+    });
+});

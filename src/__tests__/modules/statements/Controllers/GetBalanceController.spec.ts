@@ -47,6 +47,20 @@ describe("Show User Profile Controller", () => {
         });
 
         expect(response.body).toHaveProperty("statement");
-        expect(response.body).toHaveProperty("balance");;
+        expect(response.body).toHaveProperty("balance");
+    });
+
+    it("Should not be able to show user's balance if user is not logged", async () => {
+        const login = await request(app).post("/api/v1/sessions").send({
+            email: userEmail,
+            password: "wrongPassword",
+        });
+        const { token } = login.body;
+
+        const response = await request(app).get("/api/v1/statements/balance").set({
+            Authorization: `Bearer ${token}`,
+        });
+
+        expect(response.status).toBe(401);
     });
 });

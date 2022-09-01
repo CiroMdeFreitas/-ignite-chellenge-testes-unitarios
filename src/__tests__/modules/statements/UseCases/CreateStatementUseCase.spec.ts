@@ -84,7 +84,18 @@ describe("Create Statement Use Case", () => {
         expect(statement.type).toBe("withdraw");
     });
 
-    it("Should not be able to do a statement if user is invalid", () => {});
+    it("Should not be able to do a statement if user is invalid", () => {
+        expect(async () => {
+            const wrongUserId = uuidV4();
+
+            await createStatementUseCase.execute({
+                user_id: String(wrongUserId),
+                type: "deposit" as OperationType,
+                amount: 100,
+                description: "description",
+            });
+        }).rejects.toBeInstanceOf(CreateStatementError.UserNotFound);
+    });
 
     it("Should not be able to make a withdraw from user's account if user's balance is insufficient", () => {});
 });

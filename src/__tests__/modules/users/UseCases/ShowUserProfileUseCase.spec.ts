@@ -10,7 +10,7 @@ let showUserProfileUseCase: ShowUserProfileUseCase;
 let usersRepository: IUsersRepository;
 let connection: Connection;
 
-const existingUserId = uuidV4();
+const userId = uuidV4();
 
 describe("Show User Profile Use Case", () => {
     beforeAll(async () => {
@@ -22,7 +22,7 @@ describe("Show User Profile Use Case", () => {
             `
                 INSERT INTO USERS(id, name, email, password, created_at, updated_at) 
                 values(
-                    '${existingUserId}',
+                    '${userId}',
                     'User',
                     'user@email.com',
                     '${userPassword}',
@@ -42,9 +42,9 @@ describe("Show User Profile Use Case", () => {
     });
 
     it("should be able to show user profile", async () => {
-        const userProfile = await showUserProfileUseCase.execute(existingUserId);
+        const userProfile = await showUserProfileUseCase.execute(userId);
 
-        expect(userProfile.id).toEqual(existingUserId);
+        expect(userProfile.id).toEqual(userId);
     });
 
     it("should not be able to show user profile if user does not exist", () => {

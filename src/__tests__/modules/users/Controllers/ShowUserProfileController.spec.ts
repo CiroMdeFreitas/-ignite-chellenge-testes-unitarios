@@ -15,13 +15,13 @@ describe("Show User Profile Controller", () => {
         connection = await createConnection();
         await connection.runMigrations();
         
-        const existingUserId = uuidV4();
+        const userId = uuidV4();
         const hashedPassword = await hash(userPassword, 8);
         await connection.query(
             `
                 INSERT INTO USERS(id, name, email, password, created_at, updated_at) 
                 values(
-                    '${existingUserId}',
+                    '${userId}',
                     'User',
                     '${userEmail}',
                     '${hashedPassword}',

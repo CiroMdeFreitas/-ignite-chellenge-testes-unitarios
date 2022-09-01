@@ -2,6 +2,8 @@ import { hash } from "bcryptjs";
 import { v4 as uuidV4 } from "uuid";
 import { Connection } from "typeorm";
 import createConnection from '../../../../database';
+import request from "supertest";
+import { app } from "../../../../app";
 
 let connection: Connection;
 
@@ -31,5 +33,20 @@ describe("Show User Profile Controller", () => {
     afterAll(async () => {
         await connection.dropDatabase();
         await connection.close();
+    });
+
+    it("Should be able to show user's balance if user is logged", async () => {
+        const login = await request(app).post("/api/v1/sessions").send({
+            email: userEmail,
+            password: userPassword,
+        });
+        const { token } = login.body;
+
+        const response = await request(app).get("/api/v1/statements/balance").set({
+            Authorization: `Bearer ${token}`,
+        });
+
+        expect(response.body).toHaveProperty("statement");
+        expect(response.body).toHaveProperty("balance");;
     });
 });
